@@ -1,0 +1,32 @@
+export default function Layout({ currentPage, setCurrentPage, onLogout, username, children, onMenu }) {
+  const items = ['dashboard', 'users', 'trucks', 'locations', 'entries', 'history', 'profile'];
+
+  return (
+    <div className="shell">
+      <aside className="sidebar" data-open={onMenu ? 'true' : undefined}>
+        <h2>TruckHisab</h2>
+        <nav>
+          {items.map((item) => (
+            <button
+              key={item}
+              className={currentPage === item ? 'active' : ''}
+              onClick={() => setCurrentPage(item)}
+            >
+              {item[0].toUpperCase() + item.slice(1)}
+            </button>
+          ))}
+        </nav>
+      </aside>
+      <main>
+        <header className="header">
+          <button className="menu-btn" onClick={onMenu}>☰</button>
+          <div className="header-right">
+            <span>{username}</span>
+            <button onClick={onLogout}>Logout</button>
+          </div>
+        </header>
+        <section>{children}</section>
+      </main>
+    </div>
+  );
+}
