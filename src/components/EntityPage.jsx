@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 const emptyValue = (fields) => fields.reduce((acc, field) => ({ ...acc, [field.key]: '' }), {});
 
-export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) {
+export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle, entityLabel = 'Record' }) {
   const [draft, setDraft] = useState(emptyValue(fields));
   const [showFormModal, setShowFormModal] = useState(false);
   const [formMode, setFormMode] = useState('add');
@@ -87,7 +87,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
     <div className="card">
       <div className="card-header">
         <h2>{title}</h2>
-        <button type="button" onClick={openAddModal}>Add New</button>
+        <button type="button" onClick={openAddModal}>Add {entityLabel}</button>
       </div>
 
       <div className="table-wrap">
@@ -137,7 +137,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
       {showFormModal && (
         <div className="modal-overlay" role="dialog" aria-modal="true" onClick={() => setShowFormModal(false)}>
           <div className="modal-card" onClick={(event) => event.stopPropagation()}>
-            <h3>{formMode === 'edit' ? 'Edit Record' : `Add ${title}`}</h3>
+            <h3>{formMode === 'edit' ? `Edit ${entityLabel}` : `Add ${entityLabel}`}</h3>
             <form className="entity-form" onSubmit={handleSubmit}>
               {fields.map((field) => (
                 <label key={field.key}>
@@ -153,7 +153,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
                 <button type="button" className="secondary" onClick={() => setShowFormModal(false)}>
                   Cancel
                 </button>
-                <button type="submit">{formMode === 'edit' ? 'Update' : 'Add'}</button>
+                <button type="submit">{formMode === 'edit' ? `Update ${entityLabel}` : `Add ${entityLabel}`}</button>
               </div>
             </form>
           </div>

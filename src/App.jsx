@@ -6,11 +6,11 @@ import ProfilePage from './pages/ProfilePage';
 import { postApi } from './services/api';
 
 const entityConfig = {
-  users: { title: 'User List', fields: [{ key: 'name', label: 'Name' }, { key: 'username', label: 'Username' }, { key: 'email', label: 'Email' }] },
-  trucks: { title: 'Truck List', fields: [{ key: 'name', label: 'Truck Name' }, { key: 'number', label: 'Truck Number' }] },
-  locations: { title: 'Location List', fields: [{ key: 'name', label: 'Location' }, { key: 'state', label: 'State' }] },
-  entries: { title: 'Truck Entry', fields: [{ key: 'truckId', label: 'Truck Name' }, { key: 'locationId', label: 'Location' }, { key: 'loadType', label: 'Load Type' }, { key: 'date', label: 'Date' }] },
-  history: { title: 'Truck Entry History', fields: [{ key: 'action', label: 'Action' }, { key: 'item', label: 'Item' }, { key: 'date', label: 'Date/Time' }] },
+  users: { title: 'User List', entityLabel: 'User', fields: [{ key: 'name', label: 'Name' }, { key: 'username', label: 'Username' }, { key: 'email', label: 'Email' }] },
+  trucks: { title: 'Truck List', entityLabel: 'Truck', fields: [{ key: 'name', label: 'Truck Name' }, { key: 'number', label: 'Truck Number' }] },
+  locations: { title: 'Location List', entityLabel: 'Location', fields: [{ key: 'name', label: 'Location' }, { key: 'state', label: 'State' }] },
+  entries: { title: 'Truck Entry', entityLabel: 'Entry', fields: [{ key: 'truckId', label: 'Truck Name' }, { key: 'locationId', label: 'Location' }, { key: 'loadType', label: 'Load Type' }, { key: 'date', label: 'Date' }] },
+  history: { title: 'Truck Entry History', entityLabel: 'History', fields: [{ key: 'action', label: 'Action' }, { key: 'item', label: 'Item' }, { key: 'date', label: 'Date/Time' }] },
 };
 
 export default function App() {
@@ -123,6 +123,7 @@ export default function App() {
             title={entityConfig[currentPage].title}
             fields={entityConfig[currentPage].fields}
             items={data[currentPage]}
+            entityLabel={entityConfig[currentPage].entityLabel}
             onSave={(record) => saveEntity(currentPage, record)}
             onDelete={(id) => deleteEntity(currentPage, id)}
             onToggle={(id) => toggleEntity(currentPage, id)}
