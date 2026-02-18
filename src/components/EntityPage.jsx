@@ -5,19 +5,35 @@ const emptyValue = (fields) => fields.reduce((acc, field) => ({ ...acc, [field.k
 export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) {
   const [draft, setDraft] = useState(emptyValue(fields));
   const [showFormModal, setShowFormModal] = useState(false);
+  const [formMode, setFormMode] = useState('add');
   const [confirmState, setConfirmState] = useState(null);
   const [actionMenuId, setActionMenuId] = useState(null);
 
   useEffect(() => {
     if (!showFormModal) {
       setDraft(emptyValue(fields));
+      setFormMode('add');
     }
   }, [fields, showFormModal]);
+
+  useEffect(() => {
+    const onEsc = (event) => {
+      if (event.key === 'Escape') {
+        setShowFormModal(false);
+        setConfirmState(null);
+        setActionMenuId(null);
+      }
+    };
+
+    window.addEventListener('keydown', onEsc);
+    return () => window.removeEventListener('keydown', onEsc);
+  }, []);
 
   const tableColumns = useMemo(() => ['id', ...fields.map((f) => f.key), 'enabled'], [fields]);
 
   const openAddModal = () => {
     setDraft(emptyValue(fields));
+    setFormMode('add');
     setShowFormModal(true);
   };
 
@@ -29,6 +45,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
 
   const handleEdit = (item) => {
     setDraft(item);
+    setFormMode('edit');
     setShowFormModal(true);
     setActionMenuId(null);
   };
@@ -70,7 +87,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
     <div className="card">
       <div className="card-header">
         <h2>{title}</h2>
-        <button onClick={openAddModal}>Add New</button>
+        <button type="button" onClick={openAddModal}>Add New</button>
       </div>
 
       <div className="table-wrap">
@@ -91,16 +108,20 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
                 ))}
                 <td>
                   <div className="action-menu-wrap">
-                    <button className="icon-btn" onClick={() => setActionMenuId(actionMenuId === item.id ? null : item.id)}>
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      onClick={() => setActionMenuId(actionMenuId === item.id ? null : item.id)}
+                    >
                       ⋮
                     </button>
                     {actionMenuId === item.id && (
                       <div className="action-menu">
-                        <button onClick={() => handleEdit(item)}>Edit</button>
-                        <button onClick={() => openToggleConfirm(item)}>
+                        <button type="button" onClick={() => handleEdit(item)}>Edit</button>
+                        <button type="button" onClick={() => openToggleConfirm(item)}>
                           {item.enabled ? 'Disable' : 'Enable'}
                         </button>
-                        <button className="danger" onClick={() => openDeleteConfirm(item)}>
+                        <button type="button" className="danger" onClick={() => openDeleteConfirm(item)}>
                           Delete
                         </button>
                       </div>
@@ -114,9 +135,9 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
       </div>
 
       {showFormModal && (
-        <div className="modal-overlay" role="dialog" aria-modal="true">
-          <div className="modal-card">
-            <h3>{draft.id ? 'Edit Record' : `Add ${title}`}</h3>
+        <div className="modal-overlay" role="dialog" aria-modal="true" onClick={() => setShowFormModal(false)}>
+          <div className="modal-card" onClick={(event) => event.stopPropagation()}>
+            <h3>{formMode === 'edit' ? 'Edit Record' : `Add ${title}`}</h3>
             <form className="entity-form" onSubmit={handleSubmit}>
               {fields.map((field) => (
                 <label key={field.key}>
@@ -132,7 +153,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
                 <button type="button" className="secondary" onClick={() => setShowFormModal(false)}>
                   Cancel
                 </button>
-                <button type="submit">{draft.id ? 'Update' : 'Add'}</button>
+                <button type="submit">{formMode === 'edit' ? 'Update' : 'Add'}</button>
               </div>
             </form>
           </div>
@@ -140,15 +161,15 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
       )}
 
       {confirmState && (
-        <div className="modal-overlay" role="alertdialog" aria-modal="true">
-          <div className="modal-card confirm-box">
+        <div className="modal-overlay" role="alertdialog" aria-modal="true" onClick={() => setConfirmState(null)}>
+          <div className="modal-card confirm-box" onClick={(event) => event.stopPropagation()}>
             <h3>{confirmState.title}</h3>
             <p>{confirmState.message}</p>
             <div className="modal-actions">
-              <button className="secondary" onClick={() => setConfirmState(null)}>
+              <button type="button" className="secondary" onClick={() => setConfirmState(null)}>
                 Cancel
               </button>
-              <button className="danger" onClick={handleConfirm}>
+              <button type="button" className="danger" onClick={handleConfirm}>
                 Confirm
               </button>
             </div>
