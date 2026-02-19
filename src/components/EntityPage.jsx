@@ -4,33 +4,57 @@ const emptyValue = (fields) => fields.reduce((acc, field) => ({ ...acc, [field.k
 
 export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) {
   const [draft, setDraft] = useState(emptyValue(fields));
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tableColumns = useMemo(() => ['id', ...fields.map((f) => f.key), 'enabled'], [fields]);
+
+  const openAddModal = () => {
+    setDraft(emptyValue(fields));
+    setIsModalOpen(true);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     onSave(draft);
     setDraft(emptyValue(fields));
+    setIsModalOpen(false);
   };
 
-  const handleEdit = (item) => setDraft(item);
+  const handleEdit = (item) => {
+    setDraft(item);
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="card">
-      <h2>{title}</h2>
-      <form className="entity-form" onSubmit={handleSubmit}>
-        {fields.map((field) => (
-          <label key={field.key}>
-            {field.label}
-            <input
-              value={draft[field.key] || ''}
-              onChange={(e) => setDraft({ ...draft, [field.key]: e.target.value })}
-              required
-            />
-          </label>
-        ))}
-        <button type="submit">{draft.id ? 'Update' : 'Add'}</button>
-      </form>
+      <div className="entity-header">
+        <h2>{title}</h2>
+        <button type="button" onClick={openAddModal}>Add</button>
+      </div>
+
+      {isModalOpen && (
+        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-card" onClick={(event) => event.stopPropagation()}>
+            <h3>{draft.id ? 'Edit Record' : 'Add Record'}</h3>
+            <form className="entity-form" onSubmit={handleSubmit}>
+              {fields.map((field) => (
+                <label key={field.key}>
+                  {field.label}
+                  <input
+                    value={draft[field.key] || ''}
+                    onChange={(e) => setDraft({ ...draft, [field.key]: e.target.value })}
+                    required
+                  />
+                </label>
+              ))}
+              <div className="modal-actions">
+                <button type="button" className="secondary-btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit">{draft.id ? 'Update' : 'Add'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="table-wrap">
         <table>
