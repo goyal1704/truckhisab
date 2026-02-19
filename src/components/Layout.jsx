@@ -1,5 +1,12 @@
-export default function Layout({currentPage,setCurrentPage,onLogout,username,children,onMenu,isMobileMenuOpen,}) 
-{
+export default function Layout({
+  currentPage,
+  setCurrentPage,
+  onLogout,
+  username,
+  children,
+  onMenu,
+  isMobileMenuOpen,
+}) {
   const items = ['dashboard', 'users', 'trucks', 'locations', 'entries', 'history', 'profile'];
 
   return (
@@ -14,16 +21,15 @@ export default function Layout({currentPage,setCurrentPage,onLogout,username,chi
           ))}
         </nav>
       </aside>
-
       {isMobileMenuOpen && <button className="menu-overlay" aria-label="Close menu" onClick={onMenu} />}
       <main>
         
         <header className="header">
-            <button className="menu-btn" onClick={onMenu}>{isMobileMenuOpen ? "✕" : "☰"}</button>
-            <div className="header-right">
-              <span>{username}</span>
-              <button onClick={onLogout}>Logout</button>
-            </div>
+          <button className="menu-btn" onClick={onMenu}>{isMobileMenuOpen ? "✕" : "☰"}</button>
+          <div className="header-right">
+            <span>{username}</span>
+            <button onClick={onLogout}>Logout</button>
+          </div>
         </header>
 
         <section>{children}</section>
