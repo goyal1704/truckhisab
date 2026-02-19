@@ -5,26 +5,12 @@ const emptyValue = (fields) => fields.reduce((acc, field) => ({ ...acc, [field.k
 export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) {
   const [draft, setDraft] = useState(emptyValue(fields));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errors, setErrors] = useState({});
 
   const tableColumns = useMemo(() => ['id', ...fields.map((f) => f.key), 'enabled'], [fields]);
 
   const openAddModal = () => {
     setDraft(emptyValue(fields));
-    setErrors({});
     setIsModalOpen(true);
-  };
-
-  const validateDraft = () => {
-    const nextErrors = {};
-    fields.forEach((field) => {
-      const value = String(draft[field.key] ?? '').trim();
-      if (!value) {
-        nextErrors[field.key] = `${field.label} is required`;
-      }
-    });
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
   };
 
   const handleSubmit = (event) => {
@@ -32,13 +18,11 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
     if (!validateDraft()) return;
     onSave(draft);
     setDraft(emptyValue(fields));
-    setErrors({});
     setIsModalOpen(false);
   };
 
   const handleEdit = (item) => {
     setDraft(item);
-    setErrors({});
     setIsModalOpen(true);
   };
 
@@ -53,20 +37,15 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-card" onClick={(event) => event.stopPropagation()}>
             <h3>{draft.id ? 'Edit Record' : 'Add Record'}</h3>
-            <form className="entity-form" onSubmit={handleSubmit} noValidate>
+            <form className="entity-form" onSubmit={handleSubmit}>
               {fields.map((field) => (
                 <label key={field.key}>
                   {field.label}
                   <input
                     value={draft[field.key] || ''}
-                    onChange={(e) => {
-                      setDraft({ ...draft, [field.key]: e.target.value });
-                      if (errors[field.key]) {
-                        setErrors((prev) => ({ ...prev, [field.key]: '' }));
-                      }
-                    }}
+                    onChange={(e) => setDraft({ ...draft, [field.key]: e.target.value })}
+                    required
                   />
-                  {errors[field.key] && <span className="field-error">{errors[field.key]}</span>}
                 </label>
               ))}
               <div className="modal-actions">
