@@ -1,9 +1,17 @@
-export default function Layout({ currentPage, setCurrentPage, onLogout, username, children, onMenu }) {
+export default function Layout({
+  currentPage,
+  setCurrentPage,
+  onLogout,
+  username,
+  children,
+  onMenu,
+  isMobileMenuOpen,
+}) {
   const items = ['dashboard', 'users', 'trucks', 'locations', 'entries', 'history', 'profile'];
 
   return (
     <div className="shell">
-      <aside className="sidebar" data-open={onMenu ? 'true' : undefined}>
+      <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`} data-open={isMobileMenuOpen ? 'true' : 'false'}>
         <h2>TruckHisab</h2>
         <nav>
           {items.map((item) => (
