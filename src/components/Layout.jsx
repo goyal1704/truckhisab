@@ -25,9 +25,10 @@ export default function Layout({
           ))}
         </nav>
       </aside>
+      {isMobileMenuOpen && <button className="menu-overlay" aria-label="Close menu" onClick={onMenu} />}
       <main>
         <header className="header">
-          <button className="menu-btn" onClick={onMenu}>☰</button>
+          <button className="menu-btn" onClick={onMenu}>{isMobileMenuOpen ? "✕" : "☰"}</button>
           <div className="header-right">
             <span>{username}</span>
             <button onClick={onLogout}>Logout</button>

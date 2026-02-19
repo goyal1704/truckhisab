@@ -38,6 +38,7 @@ button { border: 0; background: #2563eb; color: white; border-radius: 8px; paddi
 .header { background: white; padding: 10px 16px; display:flex; justify-content: space-between; align-items:center; border-bottom: 1px solid #e5e7eb; }
 .header-right { display: flex; align-items: center; gap: 8px; }
 .menu-btn { display: none; background: #111827; }
+.menu-overlay { display: none; }
 main section { padding: 16px; }
 .stats { display:grid; gap:8px; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); }
 .entity-form { margin-bottom: 14px; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); align-items: end; }
