@@ -2,39 +2,39 @@ import { useMemo, useState } from 'react';
 
 const emptyValue = (fields) => fields.reduce((acc, field) => ({ ...acc, [field.key]: '' }), {});
 
-const getFieldError = (field, value) => {
+const getFieldError = (field, value) => 
+{
   const trimmed = String(value ?? '').trim();
   if (!trimmed) return `${field.label} is required`;
 
-  if (field.key === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-    return 'Please enter a valid email';
-  }
-
-  if (field.key === 'number' && !/^[A-Za-z0-9-]{6,15}$/.test(trimmed)) {
-    return 'Truck number must be 6-15 letters/numbers';
-  }
+  if (field.key === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) { return 'Please enter a valid email'; }
+  if (field.key === 'number' && !/^[A-Za-z0-9-]{6,15}$/.test(trimmed)) { return 'Truck number must be 6-15 letters/numbers'; }
 
   return '';
 };
 
-export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) {
-  const [draft, setDraft] = useState(emptyValue(fields));
+export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) 
+{
+  const [draft,       setDraft]       = useState(emptyValue(fields));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors,      setErrors]      = useState({});
   const [submitError, setSubmitError] = useState('');
 
   const tableColumns = useMemo(() => ['id', ...fields.map((f) => f.key), 'enabled'], [fields]);
 
-  const openAddModal = () => {
-    setDraft(emptyValue(fields));
-    setErrors({});
-    setSubmitError('');
-    setIsModalOpen(true);
+  const openAddModal = () => 
+  {
+      setDraft(emptyValue(fields));
+      setErrors({});
+      setSubmitError('');
+      setIsModalOpen(true);
   };
 
-  const validateDraft = () => {
+  const validateDraft = () => 
+  {
     const nextErrors = {};
-    fields.forEach((field) => {
+    fields.forEach((field) => 
+    {
       const fieldError = getFieldError(field, draft[field.key]);
       if (fieldError) nextErrors[field.key] = fieldError;
     });
