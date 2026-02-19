@@ -15,18 +15,15 @@ export default function Layout({
         <h2>TruckHisab</h2>
         <nav>
           {items.map((item) => (
-            <button
-              key={item}
-              className={currentPage === item ? 'active' : ''}
-              onClick={() => setCurrentPage(item)}
-            >
-              {item[0].toUpperCase() + item.slice(1)}
+            <button key={item} className={currentPage === item ? 'active' : ''} onClick={() => setCurrentPage(item)} >
+                {item[0].toUpperCase() + item.slice(1)}
             </button>
           ))}
         </nav>
       </aside>
       {isMobileMenuOpen && <button className="menu-overlay" aria-label="Close menu" onClick={onMenu} />}
       <main>
+        
         <header className="header">
           <button className="menu-btn" onClick={onMenu}>{isMobileMenuOpen ? "✕" : "☰"}</button>
           <div className="header-right">
@@ -34,6 +31,7 @@ export default function Layout({
             <button onClick={onLogout}>Logout</button>
           </div>
         </header>
+
         <section>{children}</section>
       </main>
     </div>

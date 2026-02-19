@@ -11,12 +11,15 @@ import { postApi } from './services/api';
 
 
 
-export default function App() {
+export default function App() 
+{
   const [authView, setAuthView] = useState('login');
+
   const [session, setSession] = useState(() => {
     const raw = localStorage.getItem('truckhisab_session');
     return raw ? JSON.parse(raw) : null;
   });
+
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [data, setData] = useState({ users: [], trucks: [], locations: [], entries: [], history: [] });
@@ -84,11 +87,7 @@ export default function App() {
     return (
       <div className="auth-shell">
         {toast && <div className="toast">{toast}</div>}
-        <AuthForm
-          type={authView}
-          onSubmit={login}
-          onSwitch={() => setAuthView((prev) => (prev === 'login' ? 'forgot' : 'login'))}
-        />
+        <AuthForm type={authView} onSubmit={login} onSwitch={() => setAuthView((prev) => (prev === 'login' ? 'forgot' : 'login'))}/>
       </div>
     );
   }
