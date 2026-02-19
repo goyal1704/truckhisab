@@ -2,27 +2,65 @@ import { useMemo, useState } from 'react';
 
 const emptyValue = (fields) => fields.reduce((acc, field) => ({ ...acc, [field.key]: '' }), {});
 
+const getFieldError = (field, value) => {
+  const trimmed = String(value ?? '').trim();
+  if (!trimmed) return `${field.label} is required`;
+
+  if (field.key === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+    return 'Please enter a valid email';
+  }
+
+  if (field.key === 'number' && !/^[A-Za-z0-9-]{6,15}$/.test(trimmed)) {
+    return 'Truck number must be 6-15 letters/numbers';
+  }
+
+  return '';
+};
+
 export default function EntityPage({ title, fields, items, onSave, onDelete, onToggle }) {
   const [draft, setDraft] = useState(emptyValue(fields));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
 
   const tableColumns = useMemo(() => ['id', ...fields.map((f) => f.key), 'enabled'], [fields]);
 
   const openAddModal = () => {
     setDraft(emptyValue(fields));
+    setErrors({});
+    setSubmitError('');
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (event) => {
+  const validateDraft = () => {
+    const nextErrors = {};
+    fields.forEach((field) => {
+      const fieldError = getFieldError(field, draft[field.key]);
+      if (fieldError) nextErrors[field.key] = fieldError;
+    });
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitError('');
     if (!validateDraft()) return;
-    onSave(draft);
-    setDraft(emptyValue(fields));
-    setIsModalOpen(false);
+
+    try {
+      await onSave(draft);
+      setDraft(emptyValue(fields));
+      setErrors({});
+      setIsModalOpen(false);
+    } catch (error) {
+      setSubmitError(error.message || 'Unable to save data');
+    }
   };
 
   const handleEdit = (item) => {
     setDraft(item);
+    setErrors({});
+    setSubmitError('');
     setIsModalOpen(true);
   };
 
@@ -43,11 +81,17 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
                   {field.label}
                   <input
                     value={draft[field.key] || ''}
-                    onChange={(e) => setDraft({ ...draft, [field.key]: e.target.value })}
-                    required
+                    onChange={(e) => {
+                      const nextValue = e.target.value;
+                      setDraft({ ...draft, [field.key]: nextValue });
+                      const fieldError = getFieldError(field, nextValue);
+                      setErrors((prev) => ({ ...prev, [field.key]: fieldError }));
+                    }}
                   />
+                  {errors[field.key] && <span className="field-error">{errors[field.key]}</span>}
                 </label>
               ))}
+              {submitError && <p className="form-error">{submitError}</p>}
               <div className="modal-actions">
                 <button type="button" className="secondary-btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
                 <button type="submit">{draft.id ? 'Update' : 'Add'}</button>
