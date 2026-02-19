@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import AuthForm from './components/AuthForm';
 import Layout from './components/Layout';
-import EntityPage from './components/EntityPage';
 import ProfilePage from './pages/ProfilePage';
+import UsersPage from './pages/UsersPage';
+import TrucksPage from './pages/TrucksPage';
+import LocationsPage from './pages/LocationsPage';
+import EntriesPage from './pages/EntriesPage';
+import HistoryPage from './pages/HistoryPage';
 import { postApi } from './services/api';
 
-const entityConfig = {
-  users: { title: 'User List', fields: [{ key: 'name', label: 'Name' }, { key: 'username', label: 'Username' }, { key: 'email', label: 'Email' }] },
-  trucks: { title: 'Truck List', fields: [{ key: 'name', label: 'Truck Name' }, { key: 'number', label: 'Truck Number' }] },
-  locations: { title: 'Location List', fields: [{ key: 'name', label: 'Location' }, { key: 'state', label: 'State' }] },
-  entries: { title: 'Truck Entry', fields: [{ key: 'truckId', label: 'Truck Name' }, { key: 'locationId', label: 'Location' }, { key: 'loadType', label: 'Load Type' }, { key: 'date', label: 'Date' }] },
-  history: { title: 'Truck Entry History', fields: [{ key: 'action', label: 'Action' }, { key: 'item', label: 'Item' }, { key: 'date', label: 'Date/Time' }] },
-};
+
 
 export default function App() {
   const [authView, setAuthView] = useState('login');
@@ -20,6 +18,7 @@ export default function App() {
     return raw ? JSON.parse(raw) : null;
   });
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [data, setData] = useState({ users: [], trucks: [], locations: [], entries: [], history: [] });
   const [toast, setToast] = useState('');
 
@@ -77,6 +76,10 @@ export default function App() {
     []
   );
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [currentPage]);
+
   if (!session) {
     return (
       <div className="auth-shell">
@@ -96,6 +99,8 @@ export default function App() {
       <Layout
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        isMobileMenuOpen={isMobileMenuOpen}
+        onMenu={() => setIsMobileMenuOpen((prev) => !prev)}
         username={session.username}
         onLogout={() => {
           localStorage.removeItem('truckhisab_session');
@@ -114,14 +119,48 @@ export default function App() {
           </div>
         )}
 
-        {['users', 'trucks', 'locations', 'entries', 'history'].includes(currentPage) && (
-          <EntityPage
-            title={entityConfig[currentPage].title}
-            fields={entityConfig[currentPage].fields}
-            items={data[currentPage]}
-            onSave={(record) => saveEntity(currentPage, record)}
-            onDelete={(id) => deleteEntity(currentPage, id)}
-            onToggle={(id) => toggleEntity(currentPage, id)}
+        {currentPage === 'users' && (
+          <UsersPage
+            items={data.users}
+            onSave={(record) => saveEntity('users', record)}
+            onDelete={(id) => deleteEntity('users', id)}
+            onToggle={(id) => toggleEntity('users', id)}
+          />
+        )}
+
+        {currentPage === 'trucks' && (
+          <TrucksPage
+            items={data.trucks}
+            onSave={(record) => saveEntity('trucks', record)}
+            onDelete={(id) => deleteEntity('trucks', id)}
+            onToggle={(id) => toggleEntity('trucks', id)}
+          />
+        )}
+
+        {currentPage === 'locations' && (
+          <LocationsPage
+            items={data.locations}
+            onSave={(record) => saveEntity('locations', record)}
+            onDelete={(id) => deleteEntity('locations', id)}
+            onToggle={(id) => toggleEntity('locations', id)}
+          />
+        )}
+
+        {currentPage === 'entries' && (
+          <EntriesPage
+            items={data.entries}
+            onSave={(record) => saveEntity('entries', record)}
+            onDelete={(id) => deleteEntity('entries', id)}
+            onToggle={(id) => toggleEntity('entries', id)}
+          />
+        )}
+
+        {currentPage === 'history' && (
+          <HistoryPage
+            items={data.history}
+            onSave={(record) => saveEntity('history', record)}
+            onDelete={(id) => deleteEntity('history', id)}
+            onToggle={(id) => toggleEntity('history', id)}
           />
         )}
 
