@@ -45,6 +45,28 @@ main section { padding: 16px; }
 table { width: 100%; border-collapse: collapse; min-width: 640px; }
 th, td { border: 1px solid #e5e7eb; padding: 8px; }
 td button { margin-right: 6px; margin-bottom: 4px; }
+
+.entity-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 120;
+}
+
+.modal-card {
+  background: white;
+  width: min(540px, 100%);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.secondary-btn { background: #6b7280; }
 .toast { position: fixed; top: 10px; right: 10px; background: #059669; color: white; padding: 10px 12px; border-radius: 8px; z-index: 99; }
 
 @media (max-width: 768px) {
