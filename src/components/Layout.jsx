@@ -11,7 +11,7 @@ export default function Layout({
 
   return (
     <div className="shell">
-      <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+      <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`} data-open={isMobileMenuOpen ? 'true' : 'false'}>
         <h2>TruckHisab</h2>
         <nav>
           {items.map((item) => (
