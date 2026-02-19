@@ -15,6 +15,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!validateDraft()) return;
     onSave(draft);
     setDraft(emptyValue(fields));
     setIsModalOpen(false);
@@ -70,9 +71,9 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
             {items.map((item) => (
               <tr key={item.id}>
                 {tableColumns.map((col) => (
-                  <td key={`${item.id}-${col}`}>{String(item[col])}</td>
+                  <td key={`${item.id}-${col}`} data-label={col}>{String(item[col])}</td>
                 ))}
-                <td>
+                <td data-label="actions">
                   <button onClick={() => handleEdit(item)}>Edit</button>
                   <button onClick={() => onDelete(item.id)}>Delete</button>
                   <button onClick={() => onToggle(item.id)}>{item.enabled ? 'Disable' : 'Enable'}</button>
