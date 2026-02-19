@@ -20,6 +20,7 @@ export default function App() {
     return raw ? JSON.parse(raw) : null;
   });
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [data, setData] = useState({ users: [], trucks: [], locations: [], entries: [], history: [] });
   const [toast, setToast] = useState('');
 
@@ -77,6 +78,10 @@ export default function App() {
     []
   );
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [currentPage]);
+
   if (!session) {
     return (
       <div className="auth-shell">
@@ -96,6 +101,8 @@ export default function App() {
       <Layout
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        isMobileMenuOpen={isMobileMenuOpen}
+        onMenu={() => setIsMobileMenuOpen((prev) => !prev)}
         username={session.username}
         onLogout={() => {
           localStorage.removeItem('truckhisab_session');
