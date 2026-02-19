@@ -69,7 +69,6 @@ td button { margin-right: 6px; margin-bottom: 4px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .secondary-btn { background: #6b7280; }
 .field-error { color: #dc2626; font-size: 12px; }
-.form-error { color: #b91c1c; margin: 0; font-size: 13px; }
 .toast { position: fixed; top: 10px; right: 10px; background: #059669; color: white; padding: 10px 12px; border-radius: 8px; z-index: 99; }
 
 @media (max-width: 768px) {

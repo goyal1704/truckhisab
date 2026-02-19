@@ -75,7 +75,7 @@ export default function EntityPage({ title, fields, items, onSave, onDelete, onT
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-card" onClick={(event) => event.stopPropagation()}>
             <h3>{draft.id ? 'Edit Record' : 'Add Record'}</h3>
-            <form className="entity-form" onSubmit={handleSubmit} noValidate>
+            <form className="entity-form" onSubmit={handleSubmit}>
               {fields.map((field) => (
                 <label key={field.key}>
                   {field.label}
